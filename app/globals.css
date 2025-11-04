@@ -1,26 +1,90 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-zinc-950 text-zinc-100;
 }
+
+
+.card {
+  @apply rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 backdrop-blur-sm;
+}
+
+.btn {
+  @apply inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-emerald-400 via-cyan-400 to-sky-400 px-3 py-2 text-sm font-medium text-zinc-900 shadow hover:from-emerald-300 hover:via-cyan-300 hover:to-sky-300 disabled:opacity-50;
+}
+
+.input {
+  @apply w-full rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-cyan-500;
+}
+
+
+.ghost-surface {
+  position: absolute;
+  inset: -40% 0;
+  background: radial-gradient(circle at 50% 20%, rgba(34, 211, 238, 0.1), transparent 55%),
+    radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.08), transparent 50%),
+    linear-gradient(180deg, rgba(9, 9, 11, 0.9), #050505 80%);
+  z-index: -2;
+}
+
+.ghost-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(63, 63, 70, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(63, 63, 70, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.3), transparent 65%);
+  z-index: -1;
+}
+
+.ghost-orb {
+  position: absolute;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 999px;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: ghostFloat 20s ease-in-out infinite alternate;
+}
+
+.ghost-orb--left {
+  top: 10%;
+  left: -10%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.45), transparent 50%);
+  animation-delay: -6s;
+}
+
+.ghost-orb--right {
+  bottom: 5%;
+  right: -5%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.45), transparent 50%);
+}
+
+.ghost-veil {
+  position: absolute;
+  inset: -30%;
+  background: conic-gradient(from 180deg at 50% 50%, rgba(34, 211, 238, 0.12), transparent 40%);
+  mix-blend-mode: screen;
+  opacity: 0.4;
+}
+
+.ghost-pill {
+  @apply rounded-full border border-zinc-800/80 bg-zinc-950/70 px-4 py-2;
+}
+
+@keyframes ghostFloat {
+  0% {
+    transform: translateY(-10px) scale(1);
+  }
+  100% {
+    transform: translateY(10px) scale(1.05);
+  }
+}
+
+
