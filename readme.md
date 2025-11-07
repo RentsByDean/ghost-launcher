@@ -4,9 +4,10 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
 
 ## Project layout
 
-- `apps/web/` – primary Next.js app (app router, API routes, Solana wallet UI)
+- `app/` – primary Next.js App Router + API routes
+- `packages/shared/` – shared workspace with branding + marketing copy used by the app
 - `docs/` – deployment and environment references (`ENV.md`, `DEPLOY_AWS.md`, `DEPLOY_HEROKU.md`)
-- Root `package.json` – workspaces wrapper; run scripts with `npm run <command>` from repo root
+- Root `package.json` – npm workspaces wrapper; run scripts with `npm run <command>` from repo root
 
 ## Requirements
 
@@ -20,7 +21,7 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
    ```bash
    npm install
    ```
-2. Copy `.env.example` (or create `.env.local`) inside `apps/web/` and fill in the variables from `docs/ENV.md`. At minimum you need:
+2. Copy `.env.example` (or create `.env.local`) at the repo root and fill in the variables from `docs/ENV.md`. At minimum you need:
    - `APP_JWT_SECRET`
    - `AWS_REGION`, `AWS_S3_BUCKET`
    - `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`
@@ -56,7 +57,7 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
 
 1. Point Amplify at the repo and select the desired branch.
 2. Build settings live in `amplify.yml`; key bits:
-   - `appRoot: apps/web`
+   - `appRoot: .` (the Next.js app lives at the root while shared packages live under `packages/`)
    - `framework: nextjs` so Amplify provisions the SSR runtime.
 3. Ensure environment variables from `docs/ENV.md` are added to the Amplify app.
 4. After deploy, map your custom domain (e.g., `ghostlaunch.xyz`) to the Amplify app.

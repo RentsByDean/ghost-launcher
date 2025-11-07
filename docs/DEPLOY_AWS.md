@@ -1,6 +1,6 @@
 # AWS Deployment (Amplify Hosting)
 
-This project is a monorepo (`apps/web`) using Next.js (App Router). The simplest way to deploy on AWS is Amplify Hosting, which supports Next.js SSR out of the box.
+This project is a monorepo (root Next.js app + `packages/*` workspaces). The simplest way to deploy on AWS is Amplify Hosting, which supports Next.js SSR out of the box.
 
 ## 1) Prepare the repo
 - We removed Heroku artifacts (`Procfile`, `heroku-postbuild`).
@@ -9,7 +9,7 @@ This project is a monorepo (`apps/web`) using Next.js (App Router). The simplest
 ## 2) Create an Amplify App
 1. In the AWS Console, open Amplify → Hosting → Get started.
 2. Connect your GitHub repo and select the branch to deploy.
-3. In “Monorepo app root”, set to `apps/web`.
+3. In “Monorepo app root”, set to `.` (the Next.js app lives at the repository root; shared packages live under `packages/`).
 4. Amplify will auto-detect `amplify.yml` at the repo root. Confirm the build settings.
 
 ## 3) Create the uploads bucket (S3)
