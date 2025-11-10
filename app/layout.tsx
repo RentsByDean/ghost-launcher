@@ -1,14 +1,21 @@
 import './globals.css';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { siteMetadata } from '@ghost/shared/branding';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: siteMetadata.seo.title,
-  description: siteMetadata.seo.description,
-  openGraph: siteMetadata.openGraph,
-  twitter: siteMetadata.twitter,
+  title: 'Ghost Launcher - Anonymous Token Launches',
+  description: 'Ghost Launcher helps you launch tokens privately without compromising speed or paying exorbitant fees.',
+  openGraph: {
+    title: 'Ghost Launcher - Anonymous Token Launches',
+    description: 'Ghost Launcher helps you launch tokens privately without compromising speed or paying exorbitant fees.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ghost Launcher - Anonymous Token Launches',
+    description: 'Ghost Launcher helps you launch tokens privately without compromising speed or paying exorbitant fees.',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

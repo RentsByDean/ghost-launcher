@@ -26,12 +26,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@ghost/shared": [
-        "./packages/shared/src/index.ts"
-      ],
-      "@ghost/shared/*": [
-        "./packages/shared/src/*"
       ]
     }
   },

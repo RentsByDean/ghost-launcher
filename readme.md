@@ -5,9 +5,8 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
 ## Project layout
 
 - `app/` – primary Next.js App Router + API routes
-- `packages/shared/` – shared workspace with branding + marketing copy used by the app
 - `docs/` – deployment and environment references (`ENV.md`, `DEPLOY_AWS.md`, `DEPLOY_HEROKU.md`)
-- Root `package.json` – npm workspaces wrapper; run scripts with `npm run <command>` from repo root
+- Root `package.json` – run scripts with `npm run <command>` from repo root
 
 ## Requirements
 
@@ -30,13 +29,13 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
    ```bash
    npm run dev
    ```
-   This proxies to `apps/web` and serves the app on `http://localhost:3000`.
+   This serves the app on `http://localhost:3000`.
 
 ## Useful scripts
 
 | Command          | Description                                  |
 | ---------------- | -------------------------------------------- |
-| `npm run dev`    | Start Next.js dev server (apps/web)          |
+| `npm run dev`    | Start Next.js dev server at the repo root    |
 | `npm run build`  | Production build for the web app             |
 | `npm run start`  | Run the compiled Next.js server locally      |
 | `npm run lint`   | ESLint via Next.js                           |
@@ -50,14 +49,14 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
 
 ## File upload flow
 
-- `apps/web/lib/storage.ts` wraps S3 uploads via `@aws-sdk/client-s3`.
+- `lib/storage.ts` wraps S3 uploads via `@aws-sdk/client-s3`.
 - Configure `AWS_S3_ACL`, `AWS_S3_PUBLIC_URL`, and `UPLOADS_PREFIX` to control object visibility.
 
 ## Deployment (AWS Amplify)
 
 1. Point Amplify at the repo and select the desired branch.
 2. Build settings live in `amplify.yml`; key bits:
-   - `appRoot: .` (the Next.js app lives at the root while shared packages live under `packages/`)
+   - `appRoot: .` (the Next.js app lives at the repository root)
    - `framework: nextjs` so Amplify provisions the SSR runtime.
 3. Ensure environment variables from `docs/ENV.md` are added to the Amplify app.
 4. After deploy, map your custom domain (e.g., `ghostlaunch.xyz`) to the Amplify app.

@@ -20,7 +20,7 @@
 The repo includes a root `Procfile`:
 
 ```
-web: cd apps/web && npm run start -- -p ${PORT:-3000}
+web: npm run start -- -p ${PORT:-3000}
 ```
 
 4) Build and deploy

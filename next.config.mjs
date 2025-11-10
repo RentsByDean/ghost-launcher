@@ -6,7 +6,6 @@ const nextConfig = {
       bodySizeLimit: '2mb',
     },
   },
-  transpilePackages: ['@ghost/shared'],
   // Ensure these heavy/native deps are treated as external for server bundling
   serverExternalPackages: ['privacycash', '@lightprotocol/hasher.rs'],
 };

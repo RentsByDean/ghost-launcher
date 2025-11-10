@@ -1,10 +1,9 @@
 "use client";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { featureHighlights, launchSteps, siteMetadata, testimonials } from '@ghost/shared';
 import { ensureLogin } from '@/lib/client-auth';
 import { useToast } from '@/lib/toast';
 
@@ -39,6 +38,60 @@ export default function Home() {
     }
   }
 
+  const bento = useMemo(
+    () => [
+      {
+        title: 'Spectral Wallet Orchestration',
+        body: 'Spinning burner wallets, funding, routing and destruction — fully automated and invisible to on-chain sleuths.',
+        accent: 'from-emerald-400/40 via-cyan-400/30 to-sky-500/30',
+      },
+      {
+        title: 'Obfuscated Liquidity',
+        body: 'Route contributions through multi-hop mixers with deterministic settlement into launch wallets.',
+        accent: 'from-sky-400/30 via-blue-500/20 to-indigo-600/30',
+      },
+      {
+        title: 'Pulse Monitoring',
+        body: 'Realtime launch health, bottlenecks and pump-ready triggers surfaced in a minimal console.',
+        accent: 'from-zinc-50/10 via-white/5 to-transparent',
+      },
+      {
+        title: 'Privacy Rewards',
+        body: 'Claim mechanics that settle to PrivacyCash before reaching your vault—no direct touchpoints.',
+        accent: 'from-emerald-400/25 via-teal-400/20 to-transparent',
+      },
+    ],
+    []
+  );
+
+  const steps = [
+    {
+      title: '01. Whisper',
+      body: 'Connect a wallet, pick parameters and Ghost orchestrates burner wallets + settlement paths.',
+    },
+    {
+      title: '02. Drift',
+      body: 'We fund, split and shuffle liquidity, preparing multiple deployment wallets without you lifting a finger.',
+    },
+    {
+      title: '03. Manifest',
+      body: 'Tokens go live with battle-tested configs, private claim flows and automated monitoring alerts.',
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote: 'Ghost Launcher feels like having an agency trading floor in my browser. The discretion and pacing is unmatched.',
+      author: 'Kai, Pump Architect',
+      role: 'Studio Nine',
+    },
+    {
+      quote: 'We ship stealth launches weekly. Ghost handles the dangerous plumbing while we focus on narrative.',
+      author: 'Sera, DeFi Strategist',
+      role: 'Specter Labs',
+    },
+  ];
+
   useEffect(() => {
     if (!pendingRoute) return;
     if (!connected) return;
@@ -68,8 +121,8 @@ export default function Home() {
 
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt={siteMetadata.name} width={32} height={32} priority />
-          <span className="text-sm font-medium uppercase tracking-[0.3em] text-zinc-400">{siteMetadata.name}</span>
+          <Image src="/logo.png" alt="Ghost Launcher" width={32} height={32} priority />
+          <span className="text-sm font-medium uppercase tracking-[0.3em] text-zinc-400">Ghost Launcher</span>
         </div>
         <div className="hidden items-center gap-3 text-xs font-medium uppercase tracking-[0.3em] text-zinc-600 md:flex">
           <span>Stealth</span>
@@ -86,9 +139,11 @@ export default function Home() {
               <span className="text-xs uppercase tracking-[0.3em] text-emerald-300">Stealth launch studio</span>
             </div>
             <h1 className="max-w-3xl bg-gradient-to-b from-white via-zinc-200 to-zinc-500 bg-clip-text text-4xl font-semibold text-transparent md:text-6xl md:leading-[1.1]">
-              {siteMetadata.tagline}
+              Launch spectral tokens with agency-grade discretion.
             </h1>
-            <p className="max-w-2xl text-balance text-base text-zinc-400 md:text-lg">{siteMetadata.description}</p>
+            <p className="max-w-2xl text-balance text-base text-zinc-400 md:text-lg">
+              Ghost Launcher choreographs wallets, capital flows and monitoring so your Pumpfun release materializes like a whisper—seen only when you want it to be.
+            </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <button className="btn px-6 py-3 text-base" onClick={() => handleEnter('/dashboard')}>
                 Launch Anonymously
@@ -99,7 +154,7 @@ export default function Home() {
         </section>
 
         <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {featureHighlights.map((item) => (
+          {bento.map((item) => (
             <div key={item.title} className={`card relative overflow-hidden border-zinc-800/70 bg-zinc-950/80`}>
               <div className={`absolute inset-0 blur-2xl opacity-70 bg-gradient-to-br ${item.accent}`} />
               <div className="relative z-10 space-y-2">
@@ -116,7 +171,7 @@ export default function Home() {
             <div className="relative z-10 space-y-6 p-6">
               <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">How it works</p>
               <div className="space-y-6">
-                {launchSteps.map((step) => (
+                {steps.map((step) => (
                   <div key={step.title} className="space-y-2">
                     <p className="font-semibold text-zinc-100">{step.title}</p>
                     <p className="text-sm text-zinc-400">{step.body}</p>
@@ -167,7 +222,7 @@ export default function Home() {
       <footer className="mx-auto mt-10 max-w-6xl px-6 pb-10 text-xs text-zinc-500">
         <div className="flex flex-col items-center justify-between gap-4 border-t border-zinc-900 pt-6 sm:flex-row">
           <div className="flex items-center gap-2">
-            <span>{siteMetadata.name}</span>
+            <span>Ghost Launcher</span>
           </div>
           <span>&copy; {new Date().getFullYear()} All rights reserved.</span>
         </div>

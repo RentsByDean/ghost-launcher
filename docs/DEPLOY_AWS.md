@@ -1,15 +1,15 @@
 # AWS Deployment (Amplify Hosting)
 
-This project is a monorepo (root Next.js app + `packages/*` workspaces). The simplest way to deploy on AWS is Amplify Hosting, which supports Next.js SSR out of the box.
+This project is a single Next.js (App Router) application at the repository root. The simplest way to deploy on AWS is Amplify Hosting, which supports Next.js SSR out of the box.
 
 ## 1) Prepare the repo
 - We removed Heroku artifacts (`Procfile`, `heroku-postbuild`).
-- Added `amplify.yml` at the repo root with `appRoot: apps/web` so Amplify builds the Next.js app in the monorepo.
+- Added `amplify.yml` at the repo root with `appRoot: .` so Amplify builds the Next.js app at the repo root.
 
 ## 2) Create an Amplify App
 1. In the AWS Console, open Amplify → Hosting → Get started.
 2. Connect your GitHub repo and select the branch to deploy.
-3. In “Monorepo app root”, set to `.` (the Next.js app lives at the repository root; shared packages live under `packages/`).
+3. In “Monorepo app root”, set to `.` (the Next.js app lives at the repository root).
 4. Amplify will auto-detect `amplify.yml` at the repo root. Confirm the build settings.
 
 ## 3) Create the uploads bucket (S3)
@@ -88,7 +88,7 @@ Amplify automatically rebuilds and deploys on each push to the configured branch
 
 ## Alternative: AWS App Runner (container)
 If you prefer to deploy a containerized Next.js server:
-1. Add a Dockerfile that builds and runs `next start` for `apps/web`.
+1. Add a Dockerfile that builds and runs `next start` from the repo root.
 2. Build and push the image to Amazon ECR.
 3. Create an App Runner service from the ECR image and configure environment variables.
 4. Map your custom domain to the App Runner service.
