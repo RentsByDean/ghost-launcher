@@ -92,6 +92,39 @@ export default function Home() {
     },
   ];
 
+  const paceLayers = [
+    {
+      key: 'js',
+      label: 'JS+',
+      quote: 'JS+: The JavaScript ecosystem (not the language!) — anyone else feels overwhelmed by the rate of rapid changes here?',
+    },
+    {
+      key: 'css',
+      label: 'CSS',
+      quote: 'CSS: Moving at a satisfying click lately, with useful new primitives landing in browsers on repeat.',
+    },
+    {
+      key: 'html',
+      label: 'HTML',
+      quote: 'HTML: Started with a couple dozen tags; now over 100 elements and still manageable to keep up.',
+    },
+    {
+      key: 'url',
+      label: 'URLs',
+      quote: 'URLs: Sadly unstable—links die all the time. We should freeze them, but the web keeps shifting.',
+    },
+    {
+      key: 'http',
+      label: 'HTTP',
+      quote: 'HTTP: Progressed gradually (hello, HTTP/2) yet it feels grounding that it doesn’t churn weekly.',
+    },
+    {
+      key: 'tcpip',
+      label: 'TCP/IP',
+      quote: 'TCP/IP: Deliberately dumb and steady—just slinging packets since forever.',
+    },
+  ];
+
   useEffect(() => {
     if (!pendingRoute) return;
     if (!connected) return;
@@ -118,6 +151,13 @@ export default function Home() {
       <div className="ghost-grid pointer-events-none" />
       <div className="ghost-orb ghost-orb--left pointer-events-none" />
       <div className="ghost-orb ghost-orb--right pointer-events-none" />
+      <div className="floating-ghost pointer-events-none" aria-hidden="true">
+        <div className="floating-ghost__wrap">
+          <Image src="/logo.png" alt="" width={240} height={240} className="floating-ghost__image" />
+          <span className="floating-ghost__glow floating-ghost__glow--one" />
+          <span className="floating-ghost__glow floating-ghost__glow--two" />
+        </div>
+      </div>
 
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
@@ -202,6 +242,39 @@ export default function Home() {
               </div>
             </div>
           ))}
+        </section>
+
+        <section className="pace-section">
+          <div className="pace-section__intro">
+            <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">Layers of the web</p>
+            <h2 className="text-2xl font-semibold text-white">Fast gets the headlines. Slow holds the power.</h2>
+            <p className="text-sm text-zinc-400">A nod to Jeremy Keith&rsquo;s talk on the pace layers of the web—each tier rotates at its own speed, yet together they form the web&rsquo;s resilience.</p>
+          </div>
+          <div className="pace-section__stack">
+            <ol className="paces" reversed>
+              {paceLayers.map((layer) => (
+                <li key={layer.key} className={`pace pace--${layer.key}`} tabIndex={0} aria-label={layer.label}>
+                  <span className="pace__label">{layer.label}</span>
+                  <blockquote className={`quote quote--${layer.key}`}>
+                    <p>{layer.quote}</p>
+                  </blockquote>
+                </li>
+              ))}
+            </ol>
+            <footer className="pace-footer">
+              <blockquote>
+                <p>
+                  Fast gets all the attention,
+                  <br />
+                  but Slow has all the power
+                </p>
+                <cite>Stewart Brand “Pace Layers”</cite>
+              </blockquote>
+              <a href="https://vimeo.com/373128517" target="_blank" rel="noreferrer">
+                The Layers of the Web — Jeremy Keith
+              </a>
+            </footer>
+          </div>
         </section>
 
         <section className="relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-br from-emerald-500/15 via-cyan-500/10 to-transparent p-8">

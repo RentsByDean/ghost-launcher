@@ -37,7 +37,7 @@ If you want the URLs returned by the API to be publicly accessible, add a bucket
 }
 ```
 
-Swap the bucket name for yours. You can also front the bucket with CloudFront and set `AWS_S3_PUBLIC_URL` to the CloudFront URL instead of opening the bucket to the public.
+Swap the bucket name for yours. You can also front the bucket with CloudFront and set `S3_PUBLIC_URL` to the CloudFront URL instead of opening the bucket to the public.
 
 ## 4) Grant the app write access
 1. In IAM → Policies, create a new policy (JSON editor) such as:
@@ -64,9 +64,9 @@ Set these in Amplify → App settings → Environment variables (mirror your loc
 - `APP_URL` / `NEXT_PUBLIC_APP_URL`: Public base URL (e.g., `https://app.example.com`)
 - `STORAGE_PROVIDER=s3`
 - `AWS_REGION` (same region as the bucket)
-- `AWS_S3_BUCKET` (bucket name)
-- `AWS_S3_PUBLIC_URL` (optional – CloudFront or S3 URL to serve uploads)
-- `AWS_S3_ACL=public-read` (optional – only if bucket ownership allows ACLs)
+- `S3_BUCKET` (bucket name)
+- `S3_PUBLIC_URL` (optional – CloudFront or S3 URL to serve uploads)
+- `S3_ACL=public-read` (optional – only if bucket ownership allows ACLs)
 - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (only when not using an attached IAM role)
 - `SOLANA_RPC_URL`, `NEXT_PUBLIC_SOLANA_RPC_URL`, `NEXT_PUBLIC_SOLANA_CLUSTER`
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`

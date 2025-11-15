@@ -14,9 +14,9 @@ export async function PUT(
     return NextResponse.json({ error: 's3_disabled' }, { status: 400 })
   }
 
-  if (!env.AWS_REGION || !env.AWS_S3_BUCKET) {
+  if (!env.AWS_REGION || !env.S3_BUCKET) {
     return NextResponse.json(
-      { error: 'missing_s3_config', message: 'AWS_REGION/AWS_S3_BUCKET not configured' },
+      { error: 'missing_s3_config', message: 'AWS_REGION/S3_BUCKET not configured' },
       { status: 500 }
     )
   }

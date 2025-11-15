@@ -1,9 +1,9 @@
 type Env = {
   STORAGE_PROVIDER?: string;
   AWS_REGION?: string;
-  AWS_S3_BUCKET?: string;
-  AWS_S3_PUBLIC_URL?: string;
-  AWS_S3_ACL?: string;
+  S3_BUCKET?: string;
+  S3_PUBLIC_URL?: string;
+  S3_ACL?: string;
   WEB3_STORAGE_TOKEN?: string;
   APP_URL?: string; // e.g. https://example.com
   UPLOADS_PREFIX?: string; // optional key prefix for uploads
@@ -24,9 +24,9 @@ function required(name: keyof Env, optional = false): string | undefined {
 export const env: Env = {
   STORAGE_PROVIDER: process.env.STORAGE_PROVIDER || 's3',
   AWS_REGION: process.env.AWS_REGION,
-  AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
-  AWS_S3_PUBLIC_URL: process.env.AWS_S3_PUBLIC_URL,
-  AWS_S3_ACL: process.env.AWS_S3_ACL,
+  S3_BUCKET: process.env.S3_BUCKET || process.env.AWS_S3_BUCKET,
+  S3_PUBLIC_URL: process.env.S3_PUBLIC_URL || process.env.AWS_S3_PUBLIC_URL,
+  S3_ACL: process.env.S3_ACL || process.env.AWS_S3_ACL,
   WEB3_STORAGE_TOKEN: process.env.WEB3_STORAGE_TOKEN,
   APP_URL: process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   UPLOADS_PREFIX: process.env.UPLOADS_PREFIX || 'uploads',

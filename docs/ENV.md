@@ -9,9 +9,9 @@ Set these in your hosting environment (e.g., AWS Amplify environment variables) 
 ## Uploads (S3)
 - `STORAGE_PROVIDER`: set to `s3`
 - `AWS_REGION`: Region where the uploads bucket lives
-- `AWS_S3_BUCKET`: Name of the uploads bucket
-- `AWS_S3_PUBLIC_URL` (optional): CloudFront or bucket URL used to serve uploaded files
-- `AWS_S3_ACL` (optional): e.g., `public-read` when bucket ownership permits ACLs
+- `S3_BUCKET`: Name of the uploads bucket
+- `S3_PUBLIC_URL` (optional): CloudFront or bucket URL used to serve uploaded files
+- `S3_ACL` (optional): e.g., `public-read` when bucket ownership permits ACLs
 - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (if not using an attached IAM role)
 - `UPLOADS_PREFIX` (optional): folder prefix inside the bucket, defaults to `uploads`
 

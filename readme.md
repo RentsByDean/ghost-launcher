@@ -22,7 +22,7 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
    ```
 2. Copy `.env.example` (or create `.env.local`) at the repo root and fill in the variables from `docs/ENV.md`. At minimum you need:
    - `APP_JWT_SECRET`
-   - `AWS_REGION`, `AWS_S3_BUCKET`
+   - `AWS_REGION`, `S3_BUCKET`
    - `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`
    - `NEXT_PUBLIC_SOLANA_RPC_URL` or `SOLANA_RPC_URL`
 3. Start the dev server:
@@ -50,7 +50,7 @@ Ghost Launcher is a Next.js 16 + Solana wallet application that lets operators c
 ## File upload flow
 
 - `lib/storage.ts` wraps S3 uploads via `@aws-sdk/client-s3`.
-- Configure `AWS_S3_ACL`, `AWS_S3_PUBLIC_URL`, and `UPLOADS_PREFIX` to control object visibility.
+- Configure `S3_ACL`, `S3_PUBLIC_URL`, and `UPLOADS_PREFIX` to control object visibility.
 
 ## Deployment (AWS Amplify)
 
@@ -67,7 +67,7 @@ Refer to `docs/DEPLOY_AWS.md` for a step-by-step Amplify walkthrough and `docs/D
 
 - **404 on Amplify** – confirm `framework: nextjs` remains in `amplify.yml` and redeploy so Amplify attaches the SSR runtime.
 - **JWT not set** – make sure `/api/auth/verify` is reachable over HTTPS; cookies are `secure` in production.
-- **S3 ACL errors** – `AWS_S3_ACL` must match `ObjectCannedACL`; values are filtered in `lib/storage.ts`.
+- **S3 ACL errors** – `S3_ACL` must match `ObjectCannedACL`; values are filtered in `lib/storage.ts`.
 
 For anything environment-specific, check `docs/ENV.md`. Cloud logs (Amplify console → Monitoring) are the fastest way to diagnose production issues.
 

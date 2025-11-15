@@ -78,12 +78,306 @@ body {
   @apply rounded-full border border-zinc-800/80 bg-zinc-950/70 px-4 py-2;
 }
 
+.floating-ghost {
+  position: absolute;
+  inset: 0;
+  display: none;
+  justify-content: flex-end;
+  align-items: flex-start;
+  z-index: -1;
+  overflow: visible;
+}
+
+@media (min-width: 768px) {
+  .floating-ghost {
+    display: flex;
+  }
+}
+
+.floating-ghost__wrap {
+  position: relative;
+  width: clamp(180px, 24vw, 360px);
+  margin-right: clamp(1.5rem, 6vw, 8rem);
+  margin-top: clamp(2rem, 12vh, 14rem);
+  animation: ghostDrift 34s ease-in-out infinite alternate;
+}
+
+.floating-ghost__image {
+  width: 100%;
+  height: auto;
+  opacity: 0.8;
+  filter: drop-shadow(0 25px 60px rgba(16, 185, 129, 0.35));
+  animation: ghostBob 6s ease-in-out infinite;
+}
+
+.floating-ghost__glow {
+  position: absolute;
+  inset: 10%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.35), transparent 70%);
+  filter: blur(45px);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+}
+
+.floating-ghost__glow--one {
+  animation: ghostPulse 8s ease-in-out infinite;
+}
+
+.floating-ghost__glow--two {
+  inset: 0;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25), transparent 65%);
+  animation: ghostPulse 11s ease-in-out infinite reverse;
+}
+
+.pace-section {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(63, 63, 70, 0.6);
+  background: rgba(9, 9, 11, 0.9);
+  padding: clamp(2rem, 4vw, 3.5rem);
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.pace-section__intro {
+  max-width: 35em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pace-section__stack {
+  position: relative;
+  width: min(90vw, 35em);
+  margin: 0 auto;
+}
+
+.paces {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.pace {
+  font-size: 90%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5em;
+  text-align: center;
+  border: 1px solid rgba(244, 244, 245, 0.4);
+  border-radius: 60%;
+  background-color: rgba(244, 244, 245, 0.08);
+  transition: all ease-in-out 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: paceRotate 30s linear infinite;
+}
+
+.pace .quote {
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.pace:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.6);
+  outline-offset: 4px;
+}
+
+.pace__label {
+  letter-spacing: 0.35em;
+}
+
+.pace:hover,
+.pace:focus,
+.pace:active {
+  cursor: grabbing;
+  background-color: #0f1012;
+  color: #0f1012;
+  animation-play-state: paused;
+}
+
+.pace:hover .quote,
+.pace:focus .quote,
+.pace:active .quote {
+  color: #fff;
+  hyphens: auto;
+  z-index: 100;
+  opacity: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
+
+.pace--js {
+  margin: 5%;
+  animation-duration: 2.5s;
+  box-shadow: 0 0 5em rgba(255, 255, 255, 0.35);
+}
+
+.pace--css {
+  margin: 10%;
+  animation-duration: 5s;
+}
+
+.pace--html {
+  margin: 15%;
+  animation-duration: 10s;
+}
+
+.pace--url {
+  margin: 20%;
+  animation-duration: 15s;
+}
+
+.pace--http {
+  margin: 25%;
+  animation-duration: 25s;
+}
+
+.pace--tcpip {
+  margin: 30%;
+  animation-duration: 35s;
+}
+
+.quote--js {
+  padding: 10%;
+}
+
+.quote--css {
+  padding: 5%;
+}
+
+.quote--html {
+  padding: 4%;
+}
+
+.pace-footer {
+  text-align: center;
+  background-color: #0b0b0c;
+  transform: translateY(-80%);
+  padding: 2em;
+  margin-left: -2em;
+  margin-right: -2em;
+  box-shadow: 0 -1em 1em #0b0b0c;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(39, 39, 42, 0.8);
+}
+
+.pace-footer blockquote {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #e4e4e7;
+}
+
+.pace-footer cite {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.pace-footer a {
+  color: #666;
+  text-decoration: none;
+}
+
+.pace-footer a:hover,
+.pace-footer a:focus {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .pace-section__stack {
+    width: 100%;
+  }
+
+  .paces {
+    padding-top: 0;
+  }
+
+  .pace {
+    position: static;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    animation: none;
+    letter-spacing: normal;
+    color: #e4e4e7;
+  }
+
+  .pace .quote {
+    opacity: 1;
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: 0.75rem;
+    color: #f4f4f5;
+  }
+}
+
 @keyframes ghostFloat {
   0% {
     transform: translateY(-10px) scale(1);
   }
   100% {
     transform: translateY(10px) scale(1.05);
+  }
+}
+
+@keyframes paceRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ghostBob {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(6px, -18px, 0) rotate(3deg) scale(1.02);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+}
+
+@keyframes ghostPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ghostDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-6vw, 2vh, 0);
   }
 }
 

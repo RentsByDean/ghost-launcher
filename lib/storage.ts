@@ -38,9 +38,9 @@ function resolveAcl(value?: string): ObjectCannedACL | undefined {
 }
 
 export async function uploadToS3(key: string, bytes: Uint8Array, contentType: string): Promise<UploadResult> {
-  const bucket = env.AWS_S3_BUCKET;
+  const bucket = env.S3_BUCKET;
   if (!bucket) {
-    throw new Error('AWS_S3_BUCKET must be configured');
+    throw new Error('S3_BUCKET must be configured');
   }
   const client = getS3Client();
   const body = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
@@ -50,13 +50,13 @@ export async function uploadToS3(key: string, bytes: Uint8Array, contentType: st
       Key: key,
       Body: body,
       ContentType: contentType,
-      ACL: resolveAcl(env.AWS_S3_ACL),
+      ACL: resolveAcl(env.S3_ACL),
       CacheControl: 'public, max-age=31536000',
     })
   );
 
   const baseUrl =
-    (env.AWS_S3_PUBLIC_URL || `https://${bucket}.s3.${env.AWS_REGION}.amazonaws.com`).replace(/\/$/, '');
+    (env.S3_PUBLIC_URL || `https://${bucket}.s3.${env.AWS_REGION}.amazonaws.com`).replace(/\/$/, '');
   const publicUrl = `${baseUrl}/${encodeKeyForUrl(key)}`;
   return { key, publicUrl };
 }
