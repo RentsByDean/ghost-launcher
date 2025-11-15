@@ -23,7 +23,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <aside className="w-64 border-r border-zinc-800 p-4 space-y-6 bg-[radial-gradient(1200px_600px_at_50%_-20%,rgba(34,211,238,0.08),transparent_60%)]">
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center gap-2 text-lg font-semibold">
-            <img src="/ghost.svg" alt="Ghost Launcher" className="w-8 h-8" />
+            <img src="/logo.png" alt="Ghost Launcher" className="w-8 h-8" />
             Ghost Launcher
           </div>
         </div>
