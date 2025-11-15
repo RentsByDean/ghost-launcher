@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { env } from '@/lib/env'
 import { getUploadsPrefix } from '@/lib/s3'
 import { uploadToS3 } from '@/lib/storage'
-import { redis } from '@/lib/redis'
+import { getRedis } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,6 +38,7 @@ export async function PUT(
   const bytes = new Uint8Array(ab)
 
   try {
+    const redis = getRedis()
     const { key: objectKey, publicUrl } = await uploadToS3(key, bytes, contentType)
     const meta = { key: objectKey, contentType, publicUrl, createdAt: Date.now() }
     await redis.set(`uploads:${key}`, meta)

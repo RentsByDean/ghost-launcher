@@ -11,7 +11,7 @@ function bytesToBase64(bytes: Uint8Array) {
 export async function ensureLogin(publicKey: PublicKey, signMessage: (message: Uint8Array) => Promise<Uint8Array>) {
   const nonceRes = await fetch('/api/auth/nonce');
   const { nonce } = await nonceRes.json();
-  const message = new TextEncoder().encode(`Sign in to Pump Launcher: ${nonce}`);
+  const message = new TextEncoder().encode(`Sign in to Ghost Launcher: ${nonce}`);
   const signature = await signMessage(message);
   const sigB64 = bytesToBase64(signature);
   const addr = publicKey.toBase58();

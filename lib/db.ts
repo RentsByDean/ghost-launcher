@@ -1,9 +1,22 @@
 import { Redis } from '@upstash/redis';
 
-export const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+let redis: Redis | null = null;
+
+export function getRedis() {
+  if (redis) return redis;
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!url || !token) {
+    throw new Error(
+      'Upstash Redis env vars missing. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.'
+    );
+  }
+
+  redis = new Redis({ url, token });
+  return redis;
+}
 
 export type LaunchRecord = {
   id: string;
@@ -41,15 +54,18 @@ export type LaunchRecord = {
 };
 
 export async function putLaunch(rec: LaunchRecord) {
-  await redis.json.set(`launch:${rec.id}`, '$', rec as any);
-  await redis.sadd(`user:${rec.userSub}:launches`, rec.id);
+  const client = getRedis();
+  await client.json.set(`launch:${rec.id}`, '$', rec as any);
+  await client.sadd(`user:${rec.userSub}:launches`, rec.id);
 }
 
 export async function getLaunch(id: string) {
-  return (await redis.json.get(`launch:${id}`)) as LaunchRecord | null;
+  const client = getRedis();
+  return (await client.json.get(`launch:${id}`)) as LaunchRecord | null;
 }
 
 export async function updateLaunch(id: string, partial: Partial<LaunchRecord>) {
+  const client = getRedis();
   const curr = await getLaunch(id);
   if (!curr) return null;
   const next = { ...curr, ...partial, updatedAt: Date.now() } as LaunchRecord;
@@ -58,16 +74,18 @@ export async function updateLaunch(id: string, partial: Partial<LaunchRecord>) {
 }
 
 export async function ensureUser(sub: string, platformWallet?: string) {
+  const client = getRedis();
   // store platform wallet address if provided
   if (platformWallet) {
-    await redis.set(`user:${sub}:platformWallet`, platformWallet);
+    await client.set(`user:${sub}:platformWallet`, platformWallet);
   }
-  const existing = (await redis.get<string>(`user:${sub}:platformWallet`)) || platformWallet;
+  const existing = (await client.get<string>(`user:${sub}:platformWallet`)) || platformWallet;
   return { platformWallet: existing };
 }
 
 export async function getUserLaunches(sub: string): Promise<LaunchRecord[]> {
-  const ids = (await redis.smembers(`user:${sub}:launches`)) as string[];
+  const client = getRedis();
+  const ids = (await client.smembers(`user:${sub}:launches`)) as string[];
   const records = await Promise.all(ids.map((id: string) => getLaunch(id)));
   return records.filter((r): r is LaunchRecord => Boolean(r));
 }

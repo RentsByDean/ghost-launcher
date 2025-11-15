@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifySessionJwt, verifySignature } from '@/lib/auth';
 import { rateLimit } from '@/lib/rate-limit';
-import { redis } from '@/lib/db';
+import { getRedis } from '@/lib/db';
 import { decryptSecret } from '@/lib/crypto';
 import { getOrCreatePlatformWallet } from '@/lib/user-wallet';
 
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
   if (!ok) return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
 
   await getOrCreatePlatformWallet(user.sub);
+  const redis = getRedis();
   const enc = await redis.get<string>(`user:${user.sub}:platformWalletEnc`);
   if (!enc) return NextResponse.json({ error: 'No key found' }, { status: 404 });
 

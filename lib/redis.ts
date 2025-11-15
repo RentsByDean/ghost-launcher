@@ -1,3 +1,3 @@
-export { redis } from '@/lib/db';
+export { getRedis } from '@/lib/db';
 
 

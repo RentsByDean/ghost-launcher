@@ -1,4 +1,4 @@
-import { getLaunch, updateLaunch, redis } from '@/lib/db';
+import { getLaunch, updateLaunch, getRedis } from '@/lib/db';
 import { getDepositStatus, withdrawForOwner } from '@/lib/privacy-cash';
 import { decryptSecret } from '@/lib/crypto';
 import { PublicKey } from '@solana/web3.js';
@@ -6,6 +6,7 @@ import { PublicKey } from '@solana/web3.js';
 type WithdrawResult = { ok?: boolean; result?: any; status?: string };
 
 export async function withdrawToLaunchWallet({ userSub, launchId }: { userSub: string; launchId: string }): Promise<WithdrawResult> {
+  const redis = getRedis();
   const rec = await getLaunch(launchId);
   if (!rec || rec.userSub !== userSub) {
     const err: any = new Error('Not found');

@@ -1,7 +1,8 @@
-import { redis } from '@/lib/db';
+import { getRedis } from '@/lib/db';
 import { NextRequest } from 'next/server';
 
 export async function rateLimit(req: NextRequest, key: string, limit = Number(process.env.RATE_LIMIT_MAX || 60), windowSec = Math.ceil((Number(process.env.RATE_LIMIT_WINDOW_MS || 60000)) / 1000)) {
+  const redis = getRedis();
   const headers = req.headers;
   const ip =
     headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||

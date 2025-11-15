@@ -1,12 +1,13 @@
 import { Keypair } from '@solana/web3.js';
 import bs58 from 'bs58';
-import { redis } from '@/lib/db';
+import { getRedis } from '@/lib/db';
 import { encryptSecret } from '@/lib/crypto';
 
 const platformWalletKey = (sub: string) => `user:${sub}:platformWallet`;
 const platformWalletEncKey = (sub: string) => `user:${sub}:platformWalletEnc`;
 
 export async function getOrCreatePlatformWallet(sub: string): Promise<{ platformWallet: string }> {
+  const redis = getRedis();
   const addrKey = platformWalletKey(sub);
   const encKey = platformWalletEncKey(sub);
 

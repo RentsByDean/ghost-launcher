@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { verifySessionJwt } from '@/lib/auth';
-import { putLaunch, getUserLaunches } from '@/lib/db';
+import { putLaunch, getUserLaunches, getRedis } from '@/lib/db';
 import type { LaunchRecord } from '@/lib/db';
 import { encryptSecret } from '@/lib/crypto';
 import { Keypair } from '@solana/web3.js';
@@ -9,7 +9,6 @@ import bs58 from 'bs58';
 import { createDepositForOwner } from '@/lib/privacy-cash';
 import { rateLimit } from '@/lib/rate-limit';
 import { Connection, PublicKey, clusterApiUrl, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { redis } from '@/lib/db';
 import { decryptSecret } from '@/lib/crypto';
 import { getOrCreatePlatformWallet } from '@/lib/user-wallet';
 import { withdrawToLaunchWallet } from '@/lib/launch/withdraw';
@@ -64,6 +63,7 @@ export async function POST(req: NextRequest) {
   const id = randomUUID();
   // Decrypt the user's platform wallet secret and create deposit from that wallet
   console.log('[launch] creating deposit');
+  const redis = getRedis();
   const encKey = await redis.get<string>(`user:${user.sub}:platformWalletEnc`);
   if (!encKey) {
     console.warn('[launch] missing platform wallet secret');
