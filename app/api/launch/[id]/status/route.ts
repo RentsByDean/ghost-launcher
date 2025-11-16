@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLaunch, updateLaunch } from '@/lib/db';
+import { getLaunch, getRedis, updateLaunch } from '@/lib/db';
 import { verifySessionJwt } from '@/lib/auth';
 import { getDepositStatus } from '@/lib/privacy-cash';
 import { rateLimit } from '@/lib/rate-limit';
+import { decryptSecret } from '@/lib/crypto';
 
 export const runtime = 'nodejs';
 
@@ -21,11 +22,19 @@ export async function GET(req: NextRequest, { params }: Params) {
   // Opportunistically update deposit status
   if (rec.privacyCash?.depositId && rec.status?.startsWith('deposit')) {
     try {
-      const st = await getDepositStatus(rec.privacyCash.depositId);
+
+      const redis = getRedis();
+      const encKey = await redis.get<string>(`user:${user.sub}:platformWalletEnc`);
+      if (!encKey) {
+        throw new Error('Platform wallet not initialized');
+      }
+      const ownerSecretB58 = await decryptSecret(encKey, process.env.APP_JWT_SECRET!);
+
+      const st = await getDepositStatus(rec.privacyCash.depositId, ownerSecretB58);
       if (st?.status && st.status !== rec.privacyCash.status) {
         await updateLaunch(rec.id, { privacyCash: { ...rec.privacyCash, status: st.status }, status: st.status });
       }
-    } catch {}
+    } catch { }
   }
 
   const latest = await getLaunch(id);
