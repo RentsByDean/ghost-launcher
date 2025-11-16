@@ -42,7 +42,7 @@ export default function DashboardPage() {
             if (typeof balanceLamports === 'number') setSolBalance(balanceLamports / LAMPORTS_PER_SOL);
           }
         }
-      } catch {}
+      } catch { }
       finally { if (mounted) setIsLoadingWallet(false); }
     })();
     return () => { mounted = false; };
@@ -56,12 +56,12 @@ export default function DashboardPage() {
         const pubkey = new PublicKey(mainAddress);
         const bal = await connection.getBalance(pubkey);
         if (mounted) setSolBalance(bal / LAMPORTS_PER_SOL);
-      } catch {}
+      } catch { }
     })();
     return () => { mounted = false; };
   }, [connection, mainAddress]);
 
-  
+
 
   return (
     <div className="space-y-8">
@@ -84,10 +84,15 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-        <div className="card">
-          <div className="mb-2 text-sm text-zinc-400">Your Launches</div>
-          <LaunchesList />
+        <div className="card space-y-3">
+          <div className="text-sm text-zinc-400">Creator Rewards</div>
+          <div className='text-3xl '>0.000 SOL</div>
+
         </div>
+      </div>
+      <div className="card p-4">
+        <div className="mb-2 text-sm text-zinc-400">Your Launches</div>
+        <LaunchesList />
       </div>
     </div>
   );
@@ -101,7 +106,7 @@ function LaunchesList() {
       try {
         const r = await fetch('/api/launch?mine=1');
         if (r.ok) setItems(await r.json());
-      } catch {}
+      } catch { }
       finally { setLoading(false); }
     })();
   }, []);

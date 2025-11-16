@@ -58,7 +58,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'simulate_failed', logs: sim.value.logs, details: sim.value.err }, { status: 400 });
   }
   const sig = await connection.sendRawTransaction(vtx.serialize(), { skipPreflight: false });
-  await connection.confirmTransaction(sig, 'finalized');
+  const resultSend = await connection.confirmTransaction(sig, 'finalized');
+  
   return NextResponse.json({ ok: true, txSig: sig });
 }
 

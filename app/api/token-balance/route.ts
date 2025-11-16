@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
 
     try {
       const res = await connection.getParsedTokenAccountsByOwner(owner, { mint });
+      console.log(owner, mint, res);
       for (const a of res.value) {
         const info: any = a.account.data.parsed.info;
         if (info.mint === mint.toBase58()) addAmount(info.tokenAmount);
