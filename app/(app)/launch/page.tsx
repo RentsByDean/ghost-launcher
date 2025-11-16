@@ -16,6 +16,7 @@ export default function LaunchPage() {
   const [ticker, setTicker] = useState("");
   const [desc, setDesc] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [metadataUri, setMetadataUri] = useState("");
   const [bannerUrl, setBannerUrl] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
   const [bannerUploading, setBannerUploading] = useState(false);
@@ -41,7 +42,7 @@ export default function LaunchPage() {
     if (!name) errs.name = 'Name is required';
     if (!ticker || ticker.length < 2 || ticker.length > 6) errs.ticker = 'Ticker must be 2-6 chars';
     if (!desc) errs.desc = 'Description is required';
-    if (!imageUrl) errs.imageUrl = 'Logo required';
+    if (!imageUrl || !metadataUri) errs.imageUrl = 'Logo required';
     if (!bannerUrl) errs.bannerUrl = 'Banner required';
     const sol = Number(targetSol);
     if (!Number.isFinite(sol) || sol <= 0) errs.targetSol = 'Enter a valid SOL amount';
@@ -74,6 +75,7 @@ export default function LaunchPage() {
           symbol: ticker,
           desc,
           imageUrl,
+          metadataUri,
           bannerUrl,
           twitter,
           telegram,
@@ -103,23 +105,40 @@ export default function LaunchPage() {
 
   // Vanity generation removed: launch wallet is created server-side
 
-  async function uploadWithS3(file: File): Promise<string> {
-    const prefix = 'uploads';
-    const safeName = (file.name || 'file').replace(/[^a-zA-Z0-9._-]/g, '_');
-    const keyName = `${Date.now()}-${safeName}`;
-    const ab = await file.arrayBuffer();
-    const up = await fetch(`/api/uploads/${prefix}/${encodeURIComponent(keyName)}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': file.type || 'application/octet-stream' },
-      body: ab,
-    });
-    if (!up.ok) {
-      let msg = 'Upload failed';
-      try { const j = await up.json(); msg = j?.message || j?.error || msg; } catch {}
+  async function uploadViaPump(file: File): Promise<{ imageUrl: string; metadataUri?: string | null }> {
+    const payload = new FormData();
+    payload.append('file', file);
+    payload.append('name', name || 'Ghost Launch Token');
+    payload.append('symbol', ticker || 'TOKEN');
+    payload.append('description', desc || 'Created via Ghost Launch');
+    payload.append('showName', 'true');
+    if (twitter) payload.append('twitter', twitter);
+    if (telegram) payload.append('telegram', telegram);
+    if (website) payload.append('website', website);
+
+    const res = await fetch('/api/uploads/pump', { method: 'POST', body: payload });
+    const clone = res.clone();
+    let data: any = null;
+    try {
+      data = await res.json();
+    } catch {
+      data = null;
+    }
+    if (!res.ok) {
+      let msg = data?.message || data?.error || 'Upload failed';
+      if (!msg) {
+        try {
+          msg = await clone.text();
+        } catch {
+          msg = 'Upload failed';
+        }
+      }
       throw new Error(msg);
     }
-    const p = await up.json();
-    return (p.publicUrl as string) || (p.proxyUrl as string);
+    const nextImageUrl = (data?.imageUrl as string | undefined) || '';
+    const nextMetadataUri = (data?.metadataUri as string | undefined) || null;
+    if (!nextImageUrl) throw new Error('Upload did not return an image URL');
+    return { imageUrl: nextImageUrl, metadataUri: nextMetadataUri };
   }
 
   return (
@@ -181,8 +200,14 @@ export default function LaunchPage() {
                     setImageUploading(true);
                     setFieldErrors((prev) => ({ ...prev, imageUrl: "" }));
                     try {
-                      const url = await uploadWithS3(f);
-                      setImageUrl(url);
+                      const uploaded = await uploadViaPump(f);
+                      const imageBlob = new Blob([await f.arrayBuffer()], { type: f.type });
+                      const imageObjectUrl = URL.createObjectURL(imageBlob);
+                      setImageUrl(imageObjectUrl);
+                      if (!uploaded.metadataUri) {
+                        throw new Error('Upload missing metadata reference');
+                      }
+                      setMetadataUri(uploaded.metadataUri);
                     } catch (err: any) {
                       setFieldErrors((prev) => ({ ...prev, imageUrl: err?.message || 'Failed to upload image. Please try a different image.' }));
                     } finally {
@@ -202,8 +227,10 @@ export default function LaunchPage() {
                     setBannerUploading(true);
                     setFieldErrors((prev) => ({ ...prev, bannerUrl: "" }));
                     try {
-                      const url = await uploadWithS3(f);
-                      setBannerUrl(url);
+                      const uploaded = await uploadViaPump(f);
+                      const bannerBlob = new Blob([await f.arrayBuffer()], { type: f.type });
+                      const bannerObjectUrl = URL.createObjectURL(bannerBlob);
+                      setBannerUrl(bannerObjectUrl);
                     } catch (err: any) {
                       setFieldErrors((prev) => ({ ...prev, bannerUrl: err?.message || 'Failed to upload banner. Please try a different image.' }));
                     } finally {
@@ -239,7 +266,7 @@ export default function LaunchPage() {
                 {fieldErrors.targetSol && (<div className="mt-1 text-xs text-red-400">{fieldErrors.targetSol}</div>)}
               </div>
               <div className="flex items-end">
-                <button type="submit" disabled={submitting || imageUploading || bannerUploading || !imageUrl || !bannerUrl || Number(targetSol) < 0.05} className="btn w-full justify-center text-base py-3">
+                <button type="submit" disabled={submitting || imageUploading || bannerUploading || !imageUrl || !metadataUri || !bannerUrl || Number(targetSol) < 0.05} className="btn w-full justify-center text-base py-3">
                   {submitting ? "Creating..." : "Launch"}
                 </button>
               </div>

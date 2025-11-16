@@ -32,15 +32,27 @@ export async function POST(req: NextRequest) {
   if (!meta?.imageUrl || !meta?.desc || !meta?.name || !meta?.symbol) {
     return NextResponse.json({ error: 'missing_metadata' }, { status: 400 });
   }
-  const uploaded = await uploadMetadataViaPumpFun({
-    name: meta.name,
-    ticker: meta.symbol,
-    description: meta.desc,
-    imageUrl: meta.imageUrl,
-    twitter: meta.twitter,
-    telegram: meta.telegram,
-    website: meta.website,
-  });
+  let metadataUri: string | undefined = meta.metadataUri;
+  if (!metadataUri) {
+    const uploaded = await uploadMetadataViaPumpFun({
+      name: meta.name,
+      ticker: meta.symbol,
+      description: meta.desc,
+      imageUrl: meta.imageUrl,
+      twitter: meta.twitter,
+      telegram: meta.telegram,
+      website: meta.website,
+    });
+    metadataUri = uploaded.metadataUri;
+    try {
+      await updateLaunch(rec.id, { meta: { ...rec.meta, metadataUri } });
+    } catch (e) {
+      console.warn('[pump-create] failed to persist metadataUri', e);
+    }
+  }
+  if (!metadataUri) {
+    return NextResponse.json({ error: 'missing_metadata_uri' }, { status: 400 });
+  }
   // Calculate buy amount from current balance: keep 0.005 SOL reserve and cover create costs
   const connection = getConnection();
   const balanceLamports = await connection.getBalance(new PublicKey(rec.launchWallet));
@@ -53,7 +65,7 @@ export async function POST(req: NextRequest) {
   const bytes = await getPortalCreateTxBytes({
     payerPubkey,
     mintPubkey: mintKp.publicKey.toBase58(),
-    metadataUri: uploaded.metadataUri,
+    metadataUri,
     amountSol,
     slippageBps: 1000,
   });

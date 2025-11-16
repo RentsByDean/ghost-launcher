@@ -19,7 +19,14 @@ export async function withdrawToLaunchWallet({ userSub, launchId }: { userSub: s
     throw err;
   }
 
-  const st = await getDepositStatus(String(rec.privacyCash?.depositId || rec.amountLamports));
+
+  const encKey = await redis.get<string>(`user:${userSub}:platformWalletEnc`);
+  if (!encKey) {
+    throw new Error('Platform wallet not initialized');
+  }
+  const ownerSecretB58 = await decryptSecret(encKey, process.env.APP_JWT_SECRET!);
+
+  const st = await getDepositStatus(String(rec.privacyCash?.depositId || rec.amountLamports), ownerSecretB58);
   const incomingStatus = st?.status || rec.status;
   const isReady = incomingStatus === 'mixed' || incomingStatus === 'ready' || incomingStatus === 'complete' || incomingStatus === 'ok';
 
@@ -27,13 +34,8 @@ export async function withdrawToLaunchWallet({ userSub, launchId }: { userSub: s
     await updateLaunch(rec.id, { status: 'withdrawing', privacyCash: { ...rec.privacyCash, status: incomingStatus } });
     let result: any;
     try {
-      const encKey = await redis.get<string>(`user:${userSub}:platformWalletEnc`);
-      if (!encKey) {
-        throw new Error('Platform wallet not initialized');
-      }
       // Validate recipient address to avoid library defaulting to owner
       new PublicKey(rec.launchWallet);
-      const ownerSecretB58 = await decryptSecret(encKey, process.env.APP_JWT_SECRET!);
       result = await withdrawForOwner({ ownerSecretB58, lamports: rec.amountLamports, toAddress: rec.launchWallet });
     } catch (e: any) {
       await updateLaunch(rec.id, { status: 'withdraw_error', privacyCash: { ...rec.privacyCash, status: 'withdraw_error' } });

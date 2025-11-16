@@ -34,7 +34,7 @@ export const env: Env = {
   PUMPFUN_PORTAL_URL: process.env.PUMPFUN_PORTAL_URL,
   PUMPFUN_PORTAL_API_KEY: process.env.PUMPFUN_PORTAL_API_KEY,
   PUMPFUN_PRIORITY_FEE_SOL: process.env.PUMPFUN_PRIORITY_FEE_SOL ? Number(process.env.PUMPFUN_PRIORITY_FEE_SOL) : undefined,
-  PUMPFUN_IPFS_URL: process.env.PUMPFUN_IPFS_URL,
+  PUMPFUN_IPFS_URL: process.env.PUMPFUN_IPFS_URL || 'https://pump.fun/api/ipfs',
 };
 
 

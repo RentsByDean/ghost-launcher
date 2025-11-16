@@ -31,14 +31,14 @@ export async function createDepositForOwner({ amountLamports, ownerSecretB58 }: 
   return res as unknown as { txSignature?: string };
 }
 
-export async function getPrivateBalance() {
-  const client = getClient();
+export async function getPrivateBalance(ownerSecretB58: string) {
+  const client = getClientForOwner(ownerSecretB58);
   return await client.getPrivateBalance();
 }
 
 // Kept for backward compatibility with previous interface; returns balance status
-export async function getDepositStatus(_unused: string) {
-  const balance = await getPrivateBalance();
+export async function getDepositStatus(_unused: string, ownerSecretB58: string) {
+  const balance = await getPrivateBalance(ownerSecretB58);
   return { status: 'ok', balance } as { status: string; balance: any };
 }
 

@@ -32,6 +32,7 @@ Set these in your hosting environment (e.g., AWS Amplify environment variables) 
 
 ## Pump.fun / Anchor
 - `PUMP_PROGRAM_ID`: Pump.fun program ID (if not in IDL)
+- `PUMPFUN_IPFS_URL` (optional): Pump.fun IPFS metadata upload endpoint (defaults to `https://pump.fun/api/ipfs`)
 
 ## Privacy Cash
 - `PRIVACY_CASH_API_KEY`: API key for Privacy Cash server SDK

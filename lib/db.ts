@@ -30,6 +30,7 @@ export type LaunchRecord = {
     symbol?: string;
     desc?: string;
     imageUrl?: string;
+    metadataUri?: string;
     bannerUrl?: string;
     twitter?: string;
     telegram?: string;
